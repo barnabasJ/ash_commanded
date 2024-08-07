@@ -100,5 +100,11 @@ defmodule AshCommanded.DataLayer.Commanded do
     end
   end
 
+  @impl true
+  def resource_to_query(arg0, arg1) do
+    dbg(["resource_to_query", arg0, arg1])
+    :ok
+  end
+
   use AshCommanded.DataLayer.Dsl
 end

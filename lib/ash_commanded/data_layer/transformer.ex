@@ -29,7 +29,7 @@ defmodule AshCommanded.DataLayer.Transformer do
     {:ok,
      T.add_attribute_if_not_exists(dsl_state, :attribute, :deleted_at,
        type: :utc_datetime,
-       private?: true
+       public?: true
      )}
   end
 
@@ -93,7 +93,7 @@ defmodule AshCommanded.DataLayer.Transformer do
     |> elem(1)
   end
 
-  def after?(Ash.Resource.Transformers.ValidatePrimaryActions), do: true
+  def after?(Ash.Resource.Transformers.DefaultAccept), do: true
 
   def after?(_), do: false
 end

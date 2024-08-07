@@ -9,20 +9,19 @@ defmodule AshCommanded.DataLayer.Application do
     quote do
       use Commanded.Application, unquote(opts)
 
-      require Ash.Api.Info
+      require Ash.Domain.Info
 
-      alias Ash.Api.Info
+      alias Ash.Domain.Info
 
       import unquote(__MODULE__)
 
       Module.register_attribute(__MODULE__, :resource, accumulate: true)
 
-      unquote(opts[:api])
+      unquote(opts[:domain])
       |> List.wrap()
-      |> Kernel.++(List.wrap(unquote(opts[:apis])))
-      |> Enum.map(fn api -> Info.depend_on_resources(api) end)
+      |> Enum.map(fn domain -> dbg(Info.resources(domain)) end)
       |> List.flatten()
-      |> Stream.filter(fn
+      |> Enum.filter(fn
         resource ->
           Ash.DataLayer.data_layer(resource) == AshCommanded.DataLayer.Commanded
       end)

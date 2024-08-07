@@ -16,7 +16,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     agg =
       A.Aggregate
       |> Ash.Changeset.for_create(:create, %{title: "Title"})
-      |> A.Api.create!()
+      |> Ash.create!()
 
     assert agg.id != nil
     assert agg.title == "Title"
@@ -24,7 +24,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     projection =
       A.Projection
       |> Ash.Query.filter(id == ^agg.id)
-      |> A.Api.read_one!()
+      |> Ash.read_one!()
 
     assert projection.id == agg.id
     assert projection.title == agg.title
@@ -34,7 +34,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     agg =
       A.Aggregate
       |> Ash.Changeset.for_create(:create, %{title: "Title"})
-      |> A.Api.create!()
+      |> Ash.create!()
 
     assert agg.id != nil
     assert agg.title == "Title"
@@ -42,7 +42,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     projection =
       A.Projection
       |> Ash.Query.filter(id == ^agg.id)
-      |> A.Api.read_one!()
+      |> Ash.read_one!()
 
     assert projection.id == agg.id
     assert projection.title == agg.title
@@ -50,7 +50,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     updated_agg =
       agg
       |> Ash.Changeset.for_update(:update, %{title: "New Title"})
-      |> A.Api.update!()
+      |> Ash.update!()
 
     assert updated_agg.id == agg.id
     assert updated_agg.title == "New Title"
@@ -58,7 +58,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     projection =
       A.Projection
       |> Ash.Query.filter(id == ^agg.id)
-      |> A.Api.read_one!()
+      |> Ash.read_one!()
 
     assert projection.id == updated_agg.id
     assert projection.title == updated_agg.title
@@ -68,7 +68,7 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     agg =
       A.Aggregate
       |> Ash.Changeset.for_create(:create, %{title: "Title"})
-      |> A.Api.create!()
+      |> Ash.create!()
 
     assert agg.id != nil
     assert agg.title == "Title"
@@ -76,19 +76,19 @@ defmodule AshCommanded.DataLayer.CommandedTest do
     projection =
       A.Projection
       |> Ash.Query.filter(id == ^agg.id)
-      |> A.Api.read_one!()
+      |> Ash.read_one!()
 
     assert projection.id == agg.id
     assert projection.title == agg.title
 
     agg
     |> Ash.Changeset.for_destroy(:destroy)
-    |> A.Api.destroy!()
+    |> Ash.destroy!()
 
     projection =
       A.Projection
       |> Ash.Query.filter(id == ^agg.id)
-      |> A.Api.read_one!()
+      |> Ash.read_one!()
 
     assert projection == nil
   end

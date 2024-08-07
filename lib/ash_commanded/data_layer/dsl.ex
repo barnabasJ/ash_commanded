@@ -29,11 +29,6 @@ defmodule AshCommanded.DataLayer.Dsl do
             type: :module,
             doc: "The Commanded Application to dispatch to",
             required: true
-          ],
-          api: [
-            type: :module,
-            doc: "The Ash Api Module to use for projections",
-            required: true
           ]
         ],
         entities: [

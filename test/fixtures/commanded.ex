@@ -5,25 +5,27 @@ defmodule CommandedTest do
     @moduledoc false
     defmodule Projection do
       @moduledoc false
-      use Ash.Resource, data_layer: Ash.DataLayer.Ets
+      use Ash.Resource, data_layer: Ash.DataLayer.Ets, domain: CommandedTest.A.Domain
 
       attributes do
-        uuid_primary_key(:id, generated?: false)
-        attribute(:title, :string)
+        uuid_primary_key(:id, generated?: false, public?: true, writable?: true)
+        attribute(:title, :string, public?: true)
       end
 
       actions do
+        default_accept(:*)
         defaults([:create, :update, :destroy, :read])
       end
     end
 
     defmodule Aggregate do
       @moduledoc false
-      use Ash.Resource, data_layer: AshCommanded.DataLayer.Commanded
+      use Ash.Resource,
+        data_layer: AshCommanded.DataLayer.Commanded,
+        domain: CommandedTest.A.Domain
 
       commanded do
         application(CommandedTest.C.Application)
-        api(CommandedTest.A.Api)
 
         projection do
           model(Projection)
@@ -33,10 +35,11 @@ defmodule CommandedTest do
 
       attributes do
         uuid_primary_key(:id)
-        attribute(:title, :string)
+        attribute(:title, :string, public?: true)
       end
 
       actions do
+        default_accept(:*)
         defaults([:create, :update, :destroy])
       end
 
@@ -45,23 +48,13 @@ defmodule CommandedTest do
       end
     end
 
-    defmodule Registry do
+    defmodule Domain do
       @moduledoc false
-      use Ash.Registry,
-        extensions: [Ash.Registry.ResourceValidations]
-
-      entries do
-        entry(Aggregate)
-        entry(Projection)
-      end
-    end
-
-    defmodule Api do
-      @moduledoc false
-      use Ash.Api
+      use Ash.Domain
 
       resources do
-        registry(Registry)
+        resource(CommandedTest.A.Aggregate)
+        resource(CommandedTest.A.Projection)
       end
     end
   end
@@ -74,7 +67,7 @@ defmodule CommandedTest do
       alias Commanded.Serialization.JsonSerializer
 
       use AshCommanded.DataLayer.Application,
-        api: CommandedTest.A.Api,
+        domain: CommandedTest.A.Domain,
         otp_app: :commanded,
         event_store: [
           adapter: InMemory,
